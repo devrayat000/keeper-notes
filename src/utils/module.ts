@@ -6,6 +6,7 @@ import type {
   Label as ILabel,
   CreateTodoInput,
   UpdateTodoInput,
+  UpdateNoteInput,
 } from '../graphql/generated'
 
 declare module 'fastify' {
@@ -41,7 +42,11 @@ declare module 'knex/types/tables' {
   type IUpdateTodoInput = Omit<UpdateTodoInput, 'notes' | 'labels'>
 
   interface Tables {
-    note: Knex.CompositeTableType<NoteTable, { text: string }, {}>
+    note: Knex.CompositeTableType<
+      NoteTable,
+      { text: string },
+      Omit<UpdateNoteInput, '_id'>
+    >
     todo: Knex.CompositeTableType<TodoTable, ICreateTodoInput, IUpdateTodoInput>
     label: Knex.CompositeTableType<ILabel, { name: string }, { name: string }>
     junction: Knex.CompositeTableType<

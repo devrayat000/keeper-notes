@@ -1,13 +1,18 @@
 import type { IResolvers } from 'mercurius'
+import { GraphQLScalarType, Kind } from 'graphql'
 
 import { labelQuery, todoQuery } from './query'
 import {
   addLabelToTodoMutation,
+  copyTodoMutation,
   createLabelMutation,
   createTodoMutation,
+  deleteLabelMutation,
+  deleteTodoMutation,
+  updateLabelMutation,
+  updateNotesMutation,
   updateTodoMutation,
-} from './mutation'
-import { GraphQLScalarType, GraphQLScalarTypeConfig, Kind } from 'graphql'
+} from './mutations'
 
 const resolvers: IResolvers = {
   Query: {
@@ -15,9 +20,17 @@ const resolvers: IResolvers = {
     todos: todoQuery,
   },
   Mutation: {
-    createLabel: createLabelMutation,
     createTodo: createTodoMutation,
     updateTodo: updateTodoMutation,
+    deleteTodo: deleteTodoMutation,
+    copyTodo: copyTodoMutation,
+
+    updateNotes: updateNotesMutation,
+
+    createLabel: createLabelMutation,
+    updateLabel: updateLabelMutation,
+    deleteLabel: deleteLabelMutation,
+
     addLabelToTodo: addLabelToTodoMutation,
     //   Subscription: {
     //     newNotification: {

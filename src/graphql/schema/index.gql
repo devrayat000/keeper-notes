@@ -75,21 +75,25 @@ type User implements Base {
   createdAt: Date!
 }
 
+# Schema
 type Mutation {
   createTodo(input: CreateTodoInput!): Todo!
   updateTodo(id: ID!, input: UpdateTodoInput!): Todo!
   deleteTodo(id: ID!): Todo!
   copyTodo(id: ID!): Todo!
-  updateNotes(ids: [ID!]!): [Note!]!
+
+  updateNotes(inputs: [UpdateNoteInput!]!): [Note!]!
+
   createLabel(name: String!): Label!
   updateLabel(id: ID!, input: String!): Label!
   deleteLabel(id: ID!): Label!
+
   addLabelToTodo(todoId: ID!, labelIds: [ID!]!): [Label!]!
 }
 
 type Query {
-  todos: [Todo!]!
-  labels: [Label!]!
+  todos(limit: Int): [Todo!]!
+  labels(limit: Int): [Label!]!
   user: User
 }
 

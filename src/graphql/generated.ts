@@ -32,7 +32,7 @@ export type Scalars = {
   Boolean: boolean
   Int: number
   Float: number
-  /** Custom Date */
+  /** Date custom scalar type */
   Date: Date
   _FieldSet: any
 }
@@ -134,7 +134,7 @@ export type MutationcopyTodoArgs = {
 }
 
 export type MutationupdateNotesArgs = {
-  ids: Array<Scalars['ID']>
+  inputs: Array<UpdateNoteInput>
 }
 
 export type MutationcreateLabelArgs = {
@@ -160,6 +160,14 @@ export type Query = {
   todos: Array<Todo>
   labels: Array<Label>
   user?: Maybe<User>
+}
+
+export type QuerytodosArgs = {
+  limit?: Maybe<Scalars['Int']>
+}
+
+export type QuerylabelsArgs = {
+  limit?: Maybe<Scalars['Int']>
 }
 
 export type ResolverTypeWrapper<T> =
@@ -284,6 +292,7 @@ export type ResolversTypes = {
   User: ResolverTypeWrapper<User>
   Mutation: ResolverTypeWrapper<{}>
   Query: ResolverTypeWrapper<{}>
+  Int: ResolverTypeWrapper<Scalars['Int']>
 }
 
 /** Mapping between all available schema types and the resolvers parents */
@@ -306,6 +315,7 @@ export type ResolversParentTypes = {
   User: User
   Mutation: {}
   Query: {}
+  Int: Scalars['Int']
 }
 
 export type BaseResolvers<
@@ -408,7 +418,7 @@ export type MutationResolvers<
     Array<ResolversTypes['Note']>,
     ParentType,
     ContextType,
-    RequireFields<MutationupdateNotesArgs, 'ids'>
+    RequireFields<MutationupdateNotesArgs, 'inputs'>
   >
   createLabel?: Resolver<
     ResolversTypes['Label'],
@@ -440,8 +450,18 @@ export type QueryResolvers<
   ContextType = MercuriusContext,
   ParentType extends ResolversParentTypes['Query'] = ResolversParentTypes['Query']
 > = {
-  todos?: Resolver<Array<ResolversTypes['Todo']>, ParentType, ContextType>
-  labels?: Resolver<Array<ResolversTypes['Label']>, ParentType, ContextType>
+  todos?: Resolver<
+    Array<ResolversTypes['Todo']>,
+    ParentType,
+    ContextType,
+    RequireFields<QuerytodosArgs, never>
+  >
+  labels?: Resolver<
+    Array<ResolversTypes['Label']>,
+    ParentType,
+    ContextType,
+    RequireFields<QuerylabelsArgs, never>
+  >
   user?: Resolver<Maybe<ResolversTypes['User']>, ParentType, ContextType>
 }
 

@@ -28,8 +28,11 @@ const loaders: MercuriusLoaders = {
           queries.map(q => q.obj._id)
         )
 
+      console.log(result)
+      console.log(queries.map(q => q.obj._id))
+
       return queries.map(q => {
-        return result.filter(r => (r.todo_id = q.obj._id))
+        return result.filter(r => r.todo_id === q.obj._id)
       })
     },
   },
