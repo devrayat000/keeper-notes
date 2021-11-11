@@ -1,0 +1,51 @@
+{
+  "name": "keeper-gql",
+  "version": "1.0.0",
+  "description": "",
+  "main": "src/app.ts",
+  "directories": {
+    "test": "test"
+  },
+  "scripts": {
+    "test": "npm run build:ts && tsc -p test/tsconfig.test.json && cross-env TS_NODE_FILES=true tap --ts test/**/*.test.ts",
+    "start": "npm run build:ts && fastify start -l info build/app.js",
+    "build:ts": "tsc",
+    "dev": "npm run gql:gen && tsc && concurrently -k -p \"[{name}]\" -n \"TypeScript,App\" -c \"yellow.bold,cyan.bold\" \"tsc -w\" \"fastify start --ignore-watch=.ts$ -w -l info -P build/app.js\"",
+    "gql:gen": "npx ts-node src/generator.ts",
+    "typeorm": "./node_modules/.bin/typeorm"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "altair-fastify-plugin": "^4.1.0",
+    "fastify": "^3.0.0",
+    "fastify-auth": "^1.1.0",
+    "fastify-autoload": "^3.3.1",
+    "fastify-cli": "^2.13.0",
+    "fastify-env": "^2.1.1",
+    "fastify-plugin": "^3.0.0",
+    "fastify-sensible": "^3.1.0",
+    "graphql": "^15.5.3",
+    "jest": "^27.3.1",
+    "knex": "^0.95.14",
+    "mercurius": "^8.2.1",
+    "mercurius-codegen": "^3.2.0",
+    "mercurius-integration-testing": "^3.2.0",
+    "nanoid": "^3.1.25",
+    "pg": "^8.7.1"
+  },
+  "devDependencies": {
+    "@types/node": "^15.0.0",
+    "@types/pg": "^8.6.1",
+    "@types/tap": "^15.0.5",
+    "concurrently": "^6.0.0",
+    "cross-env": "^7.0.3",
+    "fastify-tsconfig": "^1.0.1",
+    "pino-pretty": "^7.2.0",
+    "prettier": "^2.4.1",
+    "tap": "^15.0.10",
+    "ts-node": "^10.0.0",
+    "typescript": "^4.2.4"
+  }
+}

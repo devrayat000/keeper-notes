@@ -1,0 +1,99 @@
+# Inputs
+input UpdateNoteInput {
+  _id: ID!
+  text: String
+  isCompleted: Boolean
+}
+
+input CreateTodoInput {
+  title: String!
+  notes: [String!]
+  color: String = "#fafafa"
+  isCheckBoxMode: Boolean = false
+}
+
+input UpdateTodoInput {
+  title: String
+  notes: [UpdateNoteInput!]
+  color: String
+  isCheckBoxMode: Boolean
+}
+
+# Interfaces
+interface Base {
+  _id: ID!
+  createdAt: Date!
+}
+
+# Scalars
+"""
+Custom Date
+"""
+scalar Date
+
+# Types
+"""
+Label for todos
+"""
+type Label implements Base {
+  _id: ID!
+  name: String!
+  createdAt: Date!
+}
+
+"""
+Notes for todos
+"""
+type Note implements Base {
+  _id: ID!
+  text: String!
+  isCompleted: Boolean!
+  createdAt: Date!
+}
+
+"""
+Todos
+"""
+type Todo implements Base {
+  _id: ID!
+  title: String!
+  notes: [Note!]!
+  labels: [Label!]!
+  color: String!
+  isCheckBoxMode: Boolean!
+  createdAt: Date!
+}
+
+type User implements Base {
+  _id: ID!
+  email: String!
+  name: String!
+  todos: [Todo!]!
+  labels: [Label!]!
+  listMode: Boolean!
+  darkMode: Boolean!
+  createdAt: Date!
+}
+
+type Mutation {
+  createTodo(input: CreateTodoInput!): Todo!
+  updateTodo(id: ID!, input: UpdateTodoInput!): Todo!
+  deleteTodo(id: ID!): Todo!
+  copyTodo(id: ID!): Todo!
+  updateNotes(ids: [ID!]!): [Note!]!
+  createLabel(name: String!): Label!
+  updateLabel(id: ID!, input: String!): Label!
+  deleteLabel(id: ID!): Label!
+  addLabelToTodo(todoId: ID!, labelIds: [ID!]!): [Label!]!
+}
+
+type Query {
+  todos: [Todo!]!
+  labels: [Label!]!
+  user: User
+}
+
+schema {
+  query: Query
+  mutation: Mutation
+}
