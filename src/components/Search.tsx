@@ -1,6 +1,8 @@
 import { styled, alpha, InputBase } from '@mui/material'
+import { Search as SearchIcon } from '@mui/icons-material'
+import { SubmitHandler, useForm } from 'react-hook-form'
 
-const Search = styled('div')(({ theme }) => ({
+export const Search = styled('div')(({ theme }) => ({
   position: 'relative',
   borderRadius: theme.shape.borderRadius,
   backgroundColor: alpha(theme.palette.common.white, 0.5),
@@ -15,8 +17,6 @@ const Search = styled('div')(({ theme }) => ({
     width: 'auto',
   },
 }))
-
-export default Search
 
 export const SearchIconWrapper = styled('div')(({ theme }) => ({
   padding: theme.spacing(0, 2),
@@ -41,3 +41,35 @@ export const StyledInputBase = styled(InputBase)(({ theme }) => ({
     },
   },
 }))
+
+const SearchBar = ({
+  onSearch,
+}: {
+  onSearch: SubmitHandler<{ search: string }>
+}) => {
+  const { register, handleSubmit } = useForm({
+    defaultValues: {
+      search: '',
+    },
+  })
+
+  return (
+    <form onSubmit={handleSubmit(onSearch)}>
+      <Search>
+        <SearchIconWrapper>
+          <SearchIcon />
+        </SearchIconWrapper>
+        <StyledInputBase
+          placeholder="Search…"
+          inputProps={{
+            'aria-label': 'search',
+            role: 'search',
+          }}
+          {...register('search')}
+        />
+      </Search>
+    </form>
+  )
+}
+
+export default SearchBar
