@@ -16,11 +16,13 @@
     "@mui/material": "^5.1.0",
     "@testing-library/react-hooks": "^7.0.2",
     "@testing-library/user-event": "^13.5.0",
+    "easy-peasy": "^5.0.4",
     "eslint-plugin-testing-library": "^5.0.0",
     "next": "12.0.3",
     "react": "17.0.2",
     "react-dom": "17.0.2",
-    "react-hook-form": "^7.19.4"
+    "react-hook-form": "^7.19.4",
+    "react-transition-group": "^4.4.2"
   },
   "devDependencies": {
     "@testing-library/jest-dom": "^5.15.0",
@@ -28,6 +30,7 @@
     "@types/jest": "^27.0.2",
     "@types/react": "^17.0.34",
     "@types/react-dom": "^17.0.11",
+    "@types/react-transition-group": "^4.4.4",
     "babel-jest": "^27.3.1",
     "eslint": "7",
     "eslint-config-next": "12.0.3",
