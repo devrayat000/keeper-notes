@@ -29,12 +29,18 @@ export class AuthService {
     };
   }
 
+  async decodeJwt(token: string) {
+    const decoded = await this.jwtService.verifyAsync<Token>(token);
+    if (!decoded) {
+      throw new UnauthorizedException('Refresh Token invalid!');
+    }
+
+    return decoded;
+  }
+
   async refreshToken(token: string) {
     try {
-      const decoded = await this.jwtService.verifyAsync<Token>(token);
-      if (!decoded) {
-        throw new UnauthorizedException('Refresh Token invalid!');
-      }
+      const decoded = await this.decodeJwt(token);
 
       const user = await this.usersService.findByEmail(decoded.email);
       if (!user) {

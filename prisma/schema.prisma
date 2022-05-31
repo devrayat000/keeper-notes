@@ -26,7 +26,7 @@ model User {
 model Todo {
   id        String   @id @default(cuid())
   title     String
-  notes     Json[]
+  notes     Note[]
   color     String   @default("#fafafa")
   mode      TodoMode @default(SIMPLE)
   labels    Label[]
@@ -34,6 +34,16 @@ model Todo {
   userId    String
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+}
+
+model Note {
+  id          String   @id @default(cuid())
+  text        String
+  isCompleted Boolean  @default(false)
+  Todo        Todo     @relation(fields: [todoId], references: [id])
+  todoId      String
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
 }
 
 model Label {

@@ -5,6 +5,8 @@ import { CreateTodoInput } from './dto/create-todo.input';
 import { UpdateTodoInput } from './dto/update-todo.input';
 import { UseGuards } from '@nestjs/common';
 import { JwtAuthGuard } from 'src/auth/jwt.guard';
+import { CurrentUser } from 'src/auth/decorators/current-user.decorator';
+import { User } from 'src/user/entities/user.entity';
 
 @Resolver(() => Todo)
 export class TodoResolver {
@@ -13,16 +15,16 @@ export class TodoResolver {
   @Mutation(() => Todo)
   @UseGuards(JwtAuthGuard)
   createTodo(
-    @Args('userId') userId: string,
+    @CurrentUser() user: User,
     @Args('createTodoInput') createTodoInput: CreateTodoInput,
   ) {
-    return this.todoService.create(userId, createTodoInput);
+    return this.todoService.create(user.id, createTodoInput);
   }
 
   @Query(() => [Todo], { name: 'todos' })
   @UseGuards(JwtAuthGuard)
-  findAll(@Args('userId') userId: string) {
-    return this.todoService.findAll(userId);
+  findAll(@CurrentUser() user: User) {
+    return this.todoService.findAll(user.id);
   }
 
   @Query(() => Todo, { name: 'todo' })

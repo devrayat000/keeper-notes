@@ -9,6 +9,7 @@ import { UserModule } from './user/user.module';
 import { Prisma } from './prisma';
 import { LabelModule } from './label/label.module';
 import { AuthModule } from './auth/auth.module';
+import { NoteModule } from './note/note.module';
 
 @Module({
   imports: [
@@ -25,6 +26,7 @@ import { AuthModule } from './auth/auth.module';
       context: (request, reply) => ({ request, reply }),
     }),
     AuthModule,
+    NoteModule,
   ],
   exports: [Prisma],
   controllers: [AppController],
