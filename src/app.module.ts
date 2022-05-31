@@ -7,11 +7,14 @@ import { AppService } from './app.service';
 import { TodoModule } from './todo/todo.module';
 import { UserModule } from './user/user.module';
 import { Prisma } from './prisma';
+import { LabelModule } from './label/label.module';
+import { AuthModule } from './auth/auth.module';
 
 @Module({
   imports: [
     TodoModule,
     UserModule,
+    LabelModule,
     GraphQLModule.forRoot<MercuriusDriverConfig>({
       driver: MercuriusDriver,
       autoSchemaFile: 'schema.graphql',
@@ -20,6 +23,7 @@ import { Prisma } from './prisma';
       ide: false,
       path: '/graphql',
     }),
+    AuthModule,
   ],
   exports: [Prisma],
   controllers: [AppController],
