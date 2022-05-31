@@ -14,10 +14,14 @@ import { Prisma } from './prisma';
     UserModule,
     GraphQLModule.forRoot<MercuriusDriverConfig>({
       driver: MercuriusDriver,
-      graphiql: true,
-      include: [UserModule, TodoModule],
+      autoSchemaFile: 'schema.graphql',
+      subscription: true,
+      graphiql: false,
+      ide: false,
+      path: '/graphql',
     }),
   ],
+  exports: [Prisma],
   controllers: [AppController],
   providers: [AppService, Prisma],
 })

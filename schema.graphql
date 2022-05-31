@@ -1,0 +1,80 @@
+# ------------------------------------------------------
+# THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
+# ------------------------------------------------------
+
+type Todo {
+  id: String!
+  title: String!
+  color: String!
+  mode: TodoMode!
+  createdAt: DateTime!
+  updatedAt: DateTime!
+}
+
+enum TodoMode {
+  SIMPLE
+  CHECKBOX
+}
+
+"""
+A date-time string at UTC, such as 2019-12-03T09:54:33Z, compliant with the date-time format.
+"""
+scalar DateTime
+
+type User {
+  """Example field (placeholder)"""
+  id: ID!
+  email: String!
+  name: String!
+  displayMode: DisplayMode!
+  darkMode: Boolean!
+  createdAt: DateTime!
+}
+
+enum DisplayMode {
+  LIST
+  GRID
+}
+
+type Query {
+  todos(userId: String!): [Todo!]!
+  todo(id: String!): Todo!
+  users: [User!]!
+  user(id: String!): User!
+}
+
+type Mutation {
+  createTodo(userId: String!, createTodoInput: CreateTodoInput!): Todo!
+  updateTodo(id: String!, updateTodoInput: UpdateTodoInput!): Todo!
+  removeTodo(id: String!): Todo!
+  copyTodo(id: String!): Todo!
+  createUser(createUserInput: CreateUserInput!): User!
+  updateUser(id: String!, updateUserInput: UpdateUserInput!): User!
+  removeUser(id: Int!): User!
+}
+
+input CreateTodoInput {
+  title: String!
+  color: String = "#fafafa"
+  mode: TodoMode = SIMPLE
+}
+
+input UpdateTodoInput {
+  title: String
+  color: String = "#fafafa"
+  mode: TodoMode = SIMPLE
+}
+
+input CreateUserInput {
+  """Example field (placeholder)"""
+  email: String!
+  name: String!
+}
+
+input UpdateUserInput {
+  """Example field (placeholder)"""
+  email: String
+  name: String
+  displayMode: DisplayMode!
+  darkMode: Boolean!
+}
