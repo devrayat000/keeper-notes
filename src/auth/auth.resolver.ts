@@ -56,6 +56,15 @@ export class AuthResolver {
     return { ...user, token };
   }
 
+  @Mutation(() => Auth)
+  @UseGuards(JwtAuthGuard)
+  logout(@Context() ctx, @CurrentUser() user: User) {
+    ctx.reply.clearCookie('accessToken');
+    ctx.reply.clearCookie('refreshToken');
+
+    return user;
+  }
+
   @Mutation(() => Token)
   async refresh(@Context() ctx, @Cookie('refreshToken') refreshToken: string) {
     const token = await this.authService.refreshToken(refreshToken);

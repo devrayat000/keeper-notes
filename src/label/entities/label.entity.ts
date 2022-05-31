@@ -9,7 +9,7 @@ export class Label {
   @Field(() => String)
   name: string;
 
-  @Field(() => [Todo])
+  @Field(() => [Todo], { nullable: true })
   todos: Todo[];
 
   @Field(() => Date)

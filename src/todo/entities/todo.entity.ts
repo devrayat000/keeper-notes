@@ -12,7 +12,7 @@ export class Todo {
   @Field(() => String)
   title: string;
 
-  @Field(() => [Note], { nullable: true })
+  @Field(() => [Note])
   notes: Note[];
 
   @Field(() => String, { defaultValue: '#fafafa' })
@@ -21,7 +21,7 @@ export class Todo {
   @Field(() => TodoMode)
   mode: TodoMode;
 
-  @Field(() => [Label], { nullable: true })
+  @Field(() => [Label])
   labels: Label[];
 
   @Field(() => Date)

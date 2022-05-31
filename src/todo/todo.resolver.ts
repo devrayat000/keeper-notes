@@ -1,4 +1,13 @@
-import { Resolver, Query, Mutation, Args } from '@nestjs/graphql';
+import {
+  Resolver,
+  Query,
+  Mutation,
+  Args,
+  ResolveField,
+  Parent,
+  ID,
+} from '@nestjs/graphql';
+
 import { TodoService } from './todo.service';
 import { Todo } from './entities/todo.entity';
 import { CreateTodoInput } from './dto/create-todo.input';
@@ -7,10 +16,15 @@ import { UseGuards } from '@nestjs/common';
 import { JwtAuthGuard } from 'src/auth/jwt.guard';
 import { CurrentUser } from 'src/auth/decorators/current-user.decorator';
 import { User } from 'src/user/entities/user.entity';
+import { Note } from 'src/note/entities/note.entity';
+import { NoteService } from 'src/note/note.service';
 
 @Resolver(() => Todo)
 export class TodoResolver {
-  constructor(private readonly todoService: TodoService) {}
+  constructor(
+    private readonly todoService: TodoService,
+    private readonly noteService: NoteService,
+  ) {}
 
   @Mutation(() => Todo)
   @UseGuards(JwtAuthGuard)
@@ -29,14 +43,14 @@ export class TodoResolver {
 
   @Query(() => Todo, { name: 'todo' })
   @UseGuards(JwtAuthGuard)
-  findOne(@Args('id') id: string) {
+  findOne(@Args('id', { type: () => ID }) id: string) {
     return this.todoService.findOne(id);
   }
 
   @Mutation(() => Todo)
   @UseGuards(JwtAuthGuard)
   updateTodo(
-    @Args('id') id: string,
+    @Args('id', { type: () => ID }) id: string,
     @Args('updateTodoInput') updateTodoInput: UpdateTodoInput,
   ) {
     return this.todoService.update(id, updateTodoInput);
@@ -44,13 +58,20 @@ export class TodoResolver {
 
   @Mutation(() => Todo)
   @UseGuards(JwtAuthGuard)
-  removeTodo(@Args('id') id: string) {
+  removeTodo(@Args('id', { type: () => ID }) id: string) {
     return this.todoService.remove(id);
   }
 
   @Mutation(() => Todo)
   @UseGuards(JwtAuthGuard)
-  copyTodo(@Args('id') id: string) {
+  copyTodo(@Args('id', { type: () => ID }) id: string) {
     return this.todoService.copy(id);
+  }
+
+  @ResolveField(() => [Note])
+  notes(@Parent() todo: Todo) {
+    console.log(todo.id);
+
+    return this.noteService.findLoaded.load(todo.id);
   }
 }

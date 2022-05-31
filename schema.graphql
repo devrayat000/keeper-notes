@@ -5,7 +5,7 @@
 type Label {
   id: ID!
   name: String!
-  todos: [Todo!]!
+  todos: [Todo!]
   createdAt: DateTime!
 }
 
@@ -23,10 +23,10 @@ type Note {
 type Todo {
   id: String!
   title: String!
-  notes: [Note!]
+  notes: [Note!]!
   color: String!
   mode: TodoMode!
-  labels: [Label!]
+  labels: [Label!]!
   createdAt: DateTime!
   updatedAt: DateTime!
 }
@@ -69,21 +69,24 @@ type Auth {
 
 type Query {
   todos: [Todo!]!
-  todo(id: String!): Todo!
+  todo(id: ID!): Todo!
+  notes(todoId: ID!): [Note!]!
+  note(id: ID!): Note!
   users: [User!]!
   user(id: String!): User!
   labels: [Label!]!
   label(id: String!): Label!
   me: User!
-  notes(todoId: ID!): [Note!]!
-  note(id: ID!): Note!
 }
 
 type Mutation {
   createTodo(createTodoInput: CreateTodoInput!): Todo!
-  updateTodo(id: String!, updateTodoInput: UpdateTodoInput!): Todo!
-  removeTodo(id: String!): Todo!
-  copyTodo(id: String!): Todo!
+  updateTodo(id: ID!, updateTodoInput: UpdateTodoInput!): Todo!
+  removeTodo(id: ID!): Todo!
+  copyTodo(id: ID!): Todo!
+  createNote(todoId: ID!, createNoteInput: CreateNoteInput!): Note!
+  updateNote(id: ID!, updateNoteInput: UpdateNoteInput!): Note!
+  removeNote(id: ID!): Note!
   createUser(createUserInput: CreateUserInput!): User!
   updateUser(id: String!, updateUserInput: UpdateUserInput!): User!
   removeUser(id: Int!): User!
@@ -92,17 +95,20 @@ type Mutation {
   removeLabel(id: String!): Label!
   createAccount(createAccountInput: CreateAccountInput!): Auth!
   login(loginInput: LoginInput!): Auth!
+  logout: Auth!
   refresh: Token!
-  createNote(todoId: ID!, createNoteInput: CreateNoteInput!): Note!
-  updateNote(id: ID!, updateNoteInput: UpdateNoteInput!): Note!
-  removeNote(id: ID!): Note!
 }
 
 input CreateTodoInput {
   title: String!
   color: String = "#fafafa"
   mode: TodoMode = SIMPLE
-  notes: [CreateNoteInput!]!
+}
+
+input UpdateTodoInput {
+  title: String
+  color: String
+  mode: TodoMode
 }
 
 input CreateNoteInput {
@@ -110,10 +116,9 @@ input CreateNoteInput {
   isCompleted: Boolean = false
 }
 
-input UpdateTodoInput {
-  title: String
-  color: String
-  mode: TodoMode
+input UpdateNoteInput {
+  text: String
+  isCompleted: Boolean = false
 }
 
 input CreateUserInput {
@@ -151,9 +156,4 @@ input CreateAccountInput {
 input LoginInput {
   email: String!
   password: String!
-}
-
-input UpdateNoteInput {
-  text: String
-  isCompleted: Boolean = false
 }

@@ -5,5 +5,6 @@ import { Prisma } from 'src/prisma';
 
 @Module({
   providers: [NoteResolver, NoteService, Prisma],
+  exports: [NoteService],
 })
 export class NoteModule {}

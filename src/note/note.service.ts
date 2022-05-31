@@ -1,4 +1,5 @@
 import { Injectable } from '@nestjs/common';
+import * as DataLoader from 'dataloader';
 
 import { Prisma } from 'src/prisma';
 import { CreateNoteInput } from './dto/create-note.input';
@@ -32,6 +33,18 @@ export class NoteService {
       },
     });
   }
+
+  readonly findLoaded = new DataLoader(async (ids: string[]) => {
+    const notes = await this.prisma.note.findMany({
+      where: {
+        todoId: {
+          in: ids,
+        },
+      },
+    });
+
+    return ids.map((id) => notes.filter((note) => note.todoId === id));
+  });
 
   update(id: string, updateNoteInput: UpdateNoteInput) {
     return this.prisma.note.update({
