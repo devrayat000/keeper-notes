@@ -44,6 +44,17 @@ enum DisplayMode {
   GRID
 }
 
+type Auth {
+  """Example field (placeholder)"""
+  id: ID!
+  email: String!
+  name: String!
+  displayMode: DisplayMode!
+  darkMode: Boolean!
+  createdAt: DateTime!
+  access_token: String!
+}
+
 type Query {
   todos(userId: String!): [Todo!]!
   todo(id: String!): Todo!
@@ -51,6 +62,7 @@ type Query {
   user(id: String!): User!
   labels(userId: String!): [Label!]!
   label(id: String!): Label!
+  me: Auth!
 }
 
 type Mutation {
@@ -64,6 +76,8 @@ type Mutation {
   createLabel(userId: String!, createLabelInput: CreateLabelInput!): Label!
   updateLabel(id: String!, updateLabelInput: UpdateLabelInput!): Label!
   removeLabel(id: String!): Label!
+  createAccount(createAccountInput: CreateAccountInput!): Auth!
+  login(loginInput: LoginInput!): Auth!
 }
 
 input CreateTodoInput {
@@ -82,12 +96,16 @@ input CreateUserInput {
   """Example field (placeholder)"""
   email: String!
   name: String!
+  hash: String!
+  salt: String!
 }
 
 input UpdateUserInput {
   """Example field (placeholder)"""
   email: String
   name: String
+  hash: String
+  salt: String
   displayMode: DisplayMode!
   darkMode: Boolean!
 }
@@ -98,4 +116,15 @@ input CreateLabelInput {
 
 input UpdateLabelInput {
   name: String
+}
+
+input CreateAccountInput {
+  email: String!
+  name: String!
+  password: String!
+}
+
+input LoginInput {
+  email: String!
+  password: String!
 }

@@ -10,10 +10,7 @@ export class UserService {
 
   create(createUserInput: CreateUserInput) {
     return this.prisma.user.create({
-      data: {
-        emali: createUserInput.email,
-        name: createUserInput.name,
-      },
+      data: createUserInput,
     });
   }
 
@@ -22,7 +19,11 @@ export class UserService {
   }
 
   findOne(id: string) {
-    return `This action returns a #${id} user`;
+    return this.prisma.user.findUnique({ where: { id } });
+  }
+
+  findByEmail(email: string) {
+    return this.prisma.user.findUnique({ where: { email } });
   }
 
   update(id: string, updateUserInput: UpdateUserInput) {
