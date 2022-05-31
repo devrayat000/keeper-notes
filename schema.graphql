@@ -44,6 +44,11 @@ enum DisplayMode {
   GRID
 }
 
+type Token {
+  accessToken: String!
+  refreshToken: String!
+}
+
 type Auth {
   """Example field (placeholder)"""
   id: ID!
@@ -52,7 +57,7 @@ type Auth {
   displayMode: DisplayMode!
   darkMode: Boolean!
   createdAt: DateTime!
-  access_token: String!
+  token: Token!
 }
 
 type Query {
@@ -62,7 +67,7 @@ type Query {
   user(id: String!): User!
   labels(userId: String!): [Label!]!
   label(id: String!): Label!
-  me: Auth!
+  me: User!
 }
 
 type Mutation {
@@ -78,6 +83,7 @@ type Mutation {
   removeLabel(id: String!): Label!
   createAccount(createAccountInput: CreateAccountInput!): Auth!
   login(loginInput: LoginInput!): Auth!
+  refresh: Token!
 }
 
 input CreateTodoInput {

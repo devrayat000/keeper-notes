@@ -12,7 +12,7 @@ import { AuthResolver } from './auth.resolver';
     PassportModule,
     JwtModule.register({
       secret: 'supersecret',
-      signOptions: { expiresIn: '60s' },
+      signOptions: { expiresIn: '15min' },
     }),
   ],
   providers: [AuthService, JwtStrategy, AuthResolver],

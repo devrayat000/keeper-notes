@@ -22,6 +22,7 @@ import { AuthModule } from './auth/auth.module';
       graphiql: false,
       ide: false,
       path: '/graphql',
+      context: (request, reply) => ({ request, reply }),
     }),
     AuthModule,
   ],
