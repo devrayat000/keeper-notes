@@ -30,7 +30,7 @@ model Todo {
   color     String   @default("#fafafa")
   mode      TodoMode @default(SIMPLE)
   labels    Label[]
-  user      User     @relation(fields: [userId], references: [id])
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
   userId    String
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -40,7 +40,7 @@ model Note {
   id          String   @id @default(cuid())
   text        String
   isCompleted Boolean  @default(false)
-  Todo        Todo     @relation(fields: [todoId], references: [id])
+  Todo        Todo     @relation(fields: [todoId], references: [id], onDelete: Cascade)
   todoId      String
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
@@ -50,7 +50,7 @@ model Label {
   id        String   @id @default(cuid())
   name      String   @unique
   todos     Todo[]
-  user      User     @relation(fields: [userId], references: [id])
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
   userId    String
   createdAt DateTime @default(now())
 }

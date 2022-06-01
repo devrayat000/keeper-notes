@@ -18,11 +18,14 @@ import { CurrentUser } from 'src/auth/decorators/current-user.decorator';
 import { User } from 'src/user/entities/user.entity';
 import { Note } from 'src/note/entities/note.entity';
 import { NoteService } from 'src/note/note.service';
+import { Label } from 'src/label/entities/label.entity';
+import { LabelService } from 'src/label/label.service';
 
 @Resolver(() => Todo)
 export class TodoResolver {
   constructor(
     private readonly todoService: TodoService,
+    private readonly labelService: LabelService,
     private readonly noteService: NoteService,
   ) {}
 
@@ -68,10 +71,13 @@ export class TodoResolver {
     return this.todoService.copy(id);
   }
 
+  @ResolveField(() => [Label])
+  labels(@Parent() todo: Todo) {
+    return this.labelService.findLoaded.load(todo.id);
+  }
+
   @ResolveField(() => [Note])
   notes(@Parent() todo: Todo) {
-    console.log(todo.id);
-
     return this.noteService.findLoaded.load(todo.id);
   }
 }

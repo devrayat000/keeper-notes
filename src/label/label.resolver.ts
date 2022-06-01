@@ -1,4 +1,11 @@
-import { Resolver, Query, Mutation, Args } from '@nestjs/graphql';
+import {
+  Resolver,
+  Query,
+  Mutation,
+  Args,
+  ResolveField,
+  Parent,
+} from '@nestjs/graphql';
 
 import { LabelService } from './label.service';
 import { Label } from './entities/label.entity';
@@ -8,10 +15,15 @@ import { User } from 'src/user/entities/user.entity';
 import { CurrentUser } from 'src/auth/decorators/current-user.decorator';
 import { JwtAuthGuard } from 'src/auth/jwt.guard';
 import { UseGuards } from '@nestjs/common';
+import { Todo } from 'src/todo/entities/todo.entity';
+import { TodoService } from 'src/todo/todo.service';
 
 @Resolver(() => Label)
 export class LabelResolver {
-  constructor(private readonly labelService: LabelService) {}
+  constructor(
+    private readonly labelService: LabelService,
+    private readonly todoService: TodoService,
+  ) {}
 
   @Mutation(() => Label)
   @UseGuards(JwtAuthGuard)
@@ -47,5 +59,10 @@ export class LabelResolver {
   @UseGuards(JwtAuthGuard)
   removeLabel(@Args('id') id: string) {
     return this.labelService.remove(id);
+  }
+
+  @ResolveField(() => [Todo])
+  todos(@Parent() label: Label) {
+    return this.todoService.findLoaded.load(label.id);
   }
 }

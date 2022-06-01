@@ -1,4 +1,5 @@
 import { Inject, Injectable } from '@nestjs/common';
+import DataLoader from 'dataloader';
 
 import { Prisma } from 'src/prisma';
 import { CreateLabelInput } from './dto/create-label.input';
@@ -30,6 +31,25 @@ export class LabelService {
       },
     });
   }
+
+  readonly findLoaded = new DataLoader(async (ids: string[]) => {
+    const labels = await this.prisma.label.findMany({
+      where: {
+        todos: {
+          every: {
+            id: {
+              in: ids,
+            },
+          },
+        },
+      },
+      include: { todos: { select: { id: true } } },
+    });
+
+    return ids.map((id) =>
+      labels.filter((label) => label.todos.some((todo) => todo.id === id)),
+    );
+  });
 
   update(id: string, updateLabelInput: UpdateLabelInput) {
     return this.prisma.label.update({

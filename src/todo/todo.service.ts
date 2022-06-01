@@ -1,4 +1,5 @@
 import { Inject, Injectable } from '@nestjs/common';
+import DataLoader from 'dataloader';
 import { Prisma } from 'src/prisma';
 import { CreateTodoInput } from './dto/create-todo.input';
 import { UpdateTodoInput } from './dto/update-todo.input';
@@ -31,6 +32,25 @@ export class TodoService {
       },
     });
   }
+
+  readonly findLoaded = new DataLoader(async (ids: string[]) => {
+    const todos = await this.prisma.todo.findMany({
+      where: {
+        labels: {
+          every: {
+            id: {
+              in: ids,
+            },
+          },
+        },
+      },
+      include: { labels: { select: { id: true } } },
+    });
+
+    return ids.map((id) =>
+      todos.filter((todo) => todo.labels.some((label) => label.id === id)),
+    );
+  });
 
   update(id: string, updateTodoInput: UpdateTodoInput) {
     return this.prisma.todo.update({
