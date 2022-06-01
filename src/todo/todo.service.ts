@@ -1,5 +1,6 @@
 import { Inject, Injectable } from '@nestjs/common';
-import DataLoader from 'dataloader';
+import * as DataLoader from 'dataloader';
+
 import { Prisma } from 'src/prisma';
 import { CreateTodoInput } from './dto/create-todo.input';
 import { UpdateTodoInput } from './dto/update-todo.input';

@@ -1,5 +1,5 @@
 import { Inject, Injectable } from '@nestjs/common';
-import DataLoader from 'dataloader';
+import * as DataLoader from 'dataloader';
 
 import { Prisma } from 'src/prisma';
 import { CreateLabelInput } from './dto/create-label.input';

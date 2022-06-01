@@ -72,10 +72,10 @@ type Query {
   todo(id: ID!): Todo!
   notes(todoId: ID!): [Note!]!
   note(id: ID!): Note!
-  users: [User!]!
-  user(id: String!): User!
   labels: [Label!]!
   label(id: String!): Label!
+  users: [User!]!
+  user(id: String!): User!
   me: User!
 }
 
@@ -87,12 +87,12 @@ type Mutation {
   createNote(todoId: ID!, createNoteInput: CreateNoteInput!): Note!
   updateNote(id: ID!, updateNoteInput: UpdateNoteInput!): Note!
   removeNote(id: ID!): Note!
-  createUser(createUserInput: CreateUserInput!): User!
-  updateUser(id: String!, updateUserInput: UpdateUserInput!): User!
-  removeUser(id: Int!): User!
   createLabel(createLabelInput: CreateLabelInput!): Label!
   updateLabel(id: String!, updateLabelInput: UpdateLabelInput!): Label!
   removeLabel(id: String!): Label!
+  createUser(createUserInput: CreateUserInput!): User!
+  updateUser(id: String!, updateUserInput: UpdateUserInput!): User!
+  removeUser(id: Int!): User!
   createAccount(createAccountInput: CreateAccountInput!): Auth!
   login(loginInput: LoginInput!): Auth!
   logout: Auth!
@@ -121,6 +121,14 @@ input UpdateNoteInput {
   isCompleted: Boolean = false
 }
 
+input CreateLabelInput {
+  name: String!
+}
+
+input UpdateLabelInput {
+  name: String
+}
+
 input CreateUserInput {
   """Example field (placeholder)"""
   email: String!
@@ -137,14 +145,6 @@ input UpdateUserInput {
   salt: String
   displayMode: DisplayMode!
   darkMode: Boolean!
-}
-
-input CreateLabelInput {
-  name: String!
-}
-
-input UpdateLabelInput {
-  name: String
 }
 
 input CreateAccountInput {

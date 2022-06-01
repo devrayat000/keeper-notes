@@ -5,6 +5,7 @@ import {
 } from '@nestjs/platform-fastify';
 import AltairFastify from 'altair-fastify-plugin';
 import fastifyCookie from '@fastify/cookie';
+import fastifyCsrf from 'fastify-csrf';
 
 import { AppModule } from './app.module';
 import { Prisma } from './prisma';
@@ -25,10 +26,11 @@ async function bootstrap() {
   await app.register(fastifyCookie, {
     secret: 'my-secret', // for cookies signature
   });
+  await app.register(fastifyCsrf);
 
   const prismaService = app.get(Prisma);
   await prismaService.enableShutdownHooks(app);
 
-  await app.listen(3000);
+  await app.listen(3001);
 }
 bootstrap();
