@@ -9,7 +9,7 @@ function RoutesApp() {
   return (
     <Routes location={location}>
       <Route index element={<h1>Hi</h1>} />
-      <Route path="auth" element={<AuthLayout />}>
+      <Route element={<AuthLayout />}>
         <Route path="login" element={<LoginPage />} />
         <Route path="register" element={<RegisterPage />} />
       </Route>
