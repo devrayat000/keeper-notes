@@ -16,6 +16,8 @@ async function bootstrap() {
     new FastifyAdapter({ logger: true }),
   );
 
+  app.enableCors();
+
   await app.register(AltairFastify, {
     path: '/altair',
     baseURL: '/altair/',
