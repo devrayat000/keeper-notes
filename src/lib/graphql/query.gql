@@ -1,0 +1,16 @@
+mutation CreateAccount($input: CreateAccountInput!) {
+  createAccount(createAccountInput: $input) {
+    id
+    createdAt
+  }
+}
+
+mutation Login($input: LoginInput!) {
+  login(loginInput: $input) {
+    id
+    email
+    name
+    displayMode
+    darkMode
+  }
+}

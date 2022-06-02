@@ -12,9 +12,11 @@ import {
 import { useForm } from "@mantine/hooks";
 import { Link } from "react-router-dom";
 import { validate as isEmail } from "is-it-email";
+import { useLoginMutation } from "$lib/graphql/generated";
+import { useUserStore } from "$lib/store";
 
 export default function LoginPage() {
-  const { getInputProps, onSubmit, reset } = useForm({
+  const { getInputProps, onSubmit, reset, errors } = useForm({
     initialValues: {
       email: "",
       password: "",
@@ -27,6 +29,16 @@ export default function LoginPage() {
       email: "Invalid Emali!",
       password: "Invalid Password!",
     },
+  });
+
+  const [, login] = useLoginMutation();
+  const setUser = useUserStore((store) => store.setUser);
+
+  const loginHandler = onSubmit(async (data) => {
+    const { data: resData } = await login({ input: data }, { suspense: false });
+    reset();
+
+    setUser(resData?.login ?? null);
   });
 
   return (
@@ -47,7 +59,15 @@ export default function LoginPage() {
         </Anchor>
       </Text>
 
-      <Paper withBorder shadow="md" p={30} mt={30} radius="md" component="form">
+      <Paper
+        withBorder
+        shadow="md"
+        p={30}
+        mt={30}
+        radius="md"
+        component="form"
+        onSubmit={loginHandler}
+      >
         <TextInput
           label="Email"
           placeholder="john@doe.com"
@@ -55,6 +75,7 @@ export default function LoginPage() {
           name="email"
           required
           {...getInputProps("email")}
+          error={errors.email}
         />
         <PasswordInput
           label="Password"
@@ -63,6 +84,7 @@ export default function LoginPage() {
           mt="md"
           name="password"
           {...getInputProps("password")}
+          error={errors.password}
         />
         <Group position="apart" mt="md">
           <Checkbox label="Remember me" />

@@ -12,6 +12,7 @@ import {
 import { Link } from "react-router-dom";
 import { validate as isEmail } from "is-it-email";
 import { useForm } from "@mantine/hooks";
+import { useCreateAccountMutation } from "$lib/graphql/generated";
 
 export function RegisterPage() {
   const { getInputProps, onSubmit, reset, errors } = useForm({
@@ -33,6 +34,13 @@ export function RegisterPage() {
       password: "Invalid Password!",
       termsAndConditions: "You must agree to our Terms & Conditions!",
     },
+  });
+
+  const [{ data }, createAccount] = useCreateAccountMutation();
+
+  const registerHandler = onSubmit(async (data) => {
+    await createAccount({ input: data }, { suspense: false });
+    reset();
   });
 
   return (
@@ -60,7 +68,7 @@ export function RegisterPage() {
         mt={30}
         radius="md"
         component="form"
-        onSubmit={onSubmit()}
+        onSubmit={registerHandler}
       >
         <TextInput
           label="Full Name"

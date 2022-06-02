@@ -1,4 +1,4 @@
-import { Route, Routes, useLocation } from "react-router-dom";
+import { Route, Routes, useLocation, useNavigate } from "react-router-dom";
 
 import LoginPage from "$lib/pages/auth/login";
 import { RegisterPage } from "$lib/pages/auth/register";
@@ -6,6 +6,7 @@ import AuthLayout from "$lib/pages/auth/__layout";
 
 function RoutesApp() {
   const location = useLocation();
+
   return (
     <Routes location={location}>
       <Route index element={<h1>Hi</h1>} />
