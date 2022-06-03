@@ -5,29 +5,29 @@ import { useEffect } from "react";
 import { Outlet, useLocation, useNavigate } from "react-router-dom";
 
 function HomeLayout() {
-  const location = useLocation();
-  const navigate = useNavigate();
+  // const location = useLocation();
+  // const navigate = useNavigate();
 
-  const [{ data, fetching, error }, fetch] = useMeQuery({
-    pause: true,
-    context: { suspense: false, requestPolicy: "network-only" },
-  });
+  // const [{ data, fetching, error }, fetch] = useMeQuery({
+  //   pause: true,
+  //   context: { suspense: false, requestPolicy: "network-only" },
+  // });
 
-  useEffect(fetch, []);
+  // useEffect(fetch, []);
 
-  useEffect(() => {
-    if (error?.message === "Unauthorized") {
-      navigate("/login", { state: location });
-    }
-  }, [error]);
+  // useEffect(() => {
+  //   if (error?.message === "Unauthorized") {
+  //     navigate("/login", { state: location });
+  //   }
+  // }, [error]);
 
-  if (fetching) {
-    return <LoadingOverlay visible />;
-  }
+  // if (fetching) {
+  //   return <LoadingOverlay visible />;
+  // }
 
-  if (error?.message === "Unauthorized") {
-    return <></>;
-  }
+  // if (error?.message === "Unauthorized") {
+  //   return <></>;
+  // }
 
   return (
     <AppShell header={<MyHeader />}>

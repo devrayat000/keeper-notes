@@ -33,22 +33,22 @@ function App() {
   }
 
   return (
-    <Router>
-      <Provider value={client}>
-        <ColorSchemeProvider
-          colorScheme={colorScheme}
-          toggleColorScheme={toggleColorScheme}
-        >
-          <MantineProvider
-            withNormalizeCSS
-            withGlobalStyles
-            theme={{ colorScheme }}
-          >
+    <ColorSchemeProvider
+      colorScheme={colorScheme}
+      toggleColorScheme={toggleColorScheme}
+    >
+      <MantineProvider
+        withNormalizeCSS
+        withGlobalStyles
+        theme={{ colorScheme, primaryColor: "yellow" }}
+      >
+        <Provider value={client}>
+          <Router>
             <RoutesApp />
-          </MantineProvider>
-        </ColorSchemeProvider>
-      </Provider>
-    </Router>
+          </Router>
+        </Provider>
+      </MantineProvider>
+    </ColorSchemeProvider>
   );
 }
 
