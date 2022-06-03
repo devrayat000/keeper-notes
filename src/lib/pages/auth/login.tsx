@@ -10,7 +10,7 @@ import {
   Button,
 } from "@mantine/core";
 import { useForm } from "@mantine/hooks";
-import { Link } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import { validate as isEmail } from "is-it-email";
 import { useLoginMutation } from "$lib/graphql/generated";
 import { useUserStore } from "$lib/store";
@@ -31,6 +31,9 @@ export default function LoginPage() {
     },
   });
 
+  const location = useLocation();
+  const navigate = useNavigate();
+
   const [, login] = useLoginMutation();
   const setUser = useUserStore((store) => store.setUser);
 
@@ -39,6 +42,9 @@ export default function LoginPage() {
     reset();
 
     setUser(resData?.login ?? null);
+    if (resData?.login) {
+      navigate("/", { state: location });
+    }
   });
 
   return (

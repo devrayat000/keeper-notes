@@ -9,19 +9,11 @@ export interface UserStore {
   setUser(user: User | null): void;
 }
 
-export const useUserStore = create<UserStore>()(
-  devtools(
-    // @ts-ignore
-    (set) => ({
-      user: null,
-      setUser(user) {
-        set({ user });
-      },
-    }),
-    {
-      name: "keeper-store",
-      enabled: true,
-      anonymousActionType: "keeper-action",
-    }
-  )
+export const useUserStore = create<UserStore>(
+  devtools((set) => ({
+    user: null,
+    setUser(user) {
+      set({ user });
+    },
+  }))
 );

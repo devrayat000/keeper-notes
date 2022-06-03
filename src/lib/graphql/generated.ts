@@ -295,6 +295,11 @@ export type LoginMutationVariables = Exact<{
 
 export type LoginMutation = { __typename?: 'Mutation', login: { __typename?: 'Auth', id: string, email: string, name: string, displayMode: DisplayMode, darkMode: boolean } };
 
+export type MeQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+export type MeQuery = { __typename?: 'Query', me: { __typename?: 'User', id: string } };
+
 
 export const CreateAccountDocument = gql`
     mutation CreateAccount($input: CreateAccountInput!) {
@@ -322,4 +327,15 @@ export const LoginDocument = gql`
 
 export function useLoginMutation() {
   return Urql.useMutation<LoginMutation, LoginMutationVariables>(LoginDocument);
+};
+export const MeDocument = gql`
+    query Me {
+  me {
+    id
+  }
+}
+    `;
+
+export function useMeQuery(options?: Omit<Urql.UseQueryArgs<MeQueryVariables>, 'query'>) {
+  return Urql.useQuery<MeQuery>({ query: MeDocument, ...options });
 };

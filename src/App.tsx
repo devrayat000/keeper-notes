@@ -16,6 +16,7 @@ import RoutesApp from "./routes";
 const client = createClient({
   url: "http://localhost:3001/graphql",
   suspense: true,
+  fetchOptions: { credentials: "include", mode: "cors" },
 });
 
 function App() {
