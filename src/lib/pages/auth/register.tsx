@@ -9,12 +9,27 @@ import {
   Button,
   InputWrapper,
 } from "@mantine/core";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { validate as isEmail } from "is-it-email";
 import { useForm } from "@mantine/hooks";
-import { useCreateAccountMutation } from "$lib/graphql/generated";
+import { graphql } from "relay-runtime";
+
+import { useUserStore } from "$lib/store";
+import { useMutation } from "react-relay";
+import { registerMutation } from "./__generated__/registerMutation.graphql";
+import { DisplayMode } from "$lib/utils/enums";
+
+const CREATE_ACCOUNT_MUTATION = graphql`
+  mutation registerMutation($input: CreateAccountInput!) {
+    createAccount(createAccountInput: $input) {
+      id
+      createdAt
+    }
+  }
+`;
 
 export function RegisterPage() {
+  const navigate = useNavigate();
   const { getInputProps, onSubmit, reset, errors } = useForm({
     initialValues: {
       name: "",
@@ -36,11 +51,30 @@ export function RegisterPage() {
     },
   });
 
-  const [{ data }, createAccount] = useCreateAccountMutation();
+  // const [{ data }, createAccount] = useCreateAccountMutation();
+  const [createAccount, isInFlight] = useMutation<registerMutation>(
+    CREATE_ACCOUNT_MUTATION
+  );
+  const setUser = useUserStore((store) => store.setUser);
 
-  const registerHandler = onSubmit(async (data) => {
-    await createAccount({ input: data }, { suspense: false });
-    reset();
+  const registerHandler = onSubmit(async ({ termsAndConditions, ...input }) => {
+    createAccount({
+      variables: { input },
+      onCompleted(response, errors) {
+        setUser(
+          {
+            ...response.createAccount,
+            ...input,
+            darkMode: false,
+            displayMode: DisplayMode.GRID,
+          } ?? null
+        );
+        reset();
+        if (response) {
+          navigate("/", { state: location });
+        }
+      },
+    });
   });
 
   return (
@@ -105,7 +139,7 @@ export function RegisterPage() {
             {...getInputProps("termsAndConditions", { type: "checkbox" })}
           />
         </InputWrapper>
-        <Button fullWidth mt="xl" type="submit">
+        <Button fullWidth mt="xl" type="submit" loading={isInFlight}>
           Sign up
         </Button>
       </Paper>

@@ -6,34 +6,34 @@
     "dev": "vite",
     "build": "tsc && vite build",
     "preview": "vite preview",
-    "codegen": "graphql-codegen --config .graphqlrc.yml"
+    "codegen": "graphql-codegen --config .graphqlrc.yml",
+    "relay": "relay-compiler"
   },
   "dependencies": {
     "@mantine/core": "^4.2.7",
     "@mantine/hooks": "^4.2.7",
-    "@urql/core": "^2.5.0",
     "easy-peasy": "^5.0.4",
     "graphql": "^16.5.0",
-    "graphql-tag": "^2.12.6",
     "is-it-email": "^1.0.1",
     "react": "^18.1.0",
     "react-dom": "^18.1.0",
     "react-error-boundary": "^3.1.4",
+    "react-relay": "^13.2.0",
     "react-router-dom": "^6.3.0",
+    "relay-runtime": "^13.2.0",
     "tabler-icons-react": "^1.48.1",
-    "urql": "^2.2.0",
     "zustand": "^4.0.0-rc.1"
   },
   "devDependencies": {
-    "@graphql-codegen/cli": "^2.6.2",
-    "@graphql-codegen/typescript": "^2.4.11",
-    "@graphql-codegen/typescript-operations": "^2.4.0",
-    "@graphql-codegen/typescript-urql": "^3.5.10",
     "@types/react": "^18.0.0",
     "@types/react-dom": "^18.0.0",
+    "@types/react-relay": "^13.0.2",
+    "@types/relay-runtime": "^13.0.3",
     "@vitejs/plugin-react": "^1.3.0",
+    "relay-compiler": "^13.2.0",
     "typescript": "^4.6.3",
     "vite": "^2.9.9",
+    "vite-plugin-relay": "^1.0.7",
     "vite-tsconfig-paths": "^3.5.0"
   }
 }

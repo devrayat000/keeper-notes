@@ -1,8 +1,8 @@
-import MyHeader from "$lib/components/home/header";
-import { useMeQuery } from "$lib/graphql/generated";
 import { AppShell, LoadingOverlay } from "@mantine/core";
 import { useEffect } from "react";
 import { Outlet, useLocation, useNavigate } from "react-router-dom";
+
+import MyHeader from "$lib/components/home/header";
 
 function HomeLayout() {
   // const location = useLocation();

@@ -9,15 +9,10 @@ import {
   useLocalStorageValue,
 } from "@mantine/hooks";
 import { BrowserRouter as Router } from "react-router-dom";
-import { createClient, Provider } from "urql";
+import { RelayEnvironmentProvider } from "react-relay/hooks";
 
 import RoutesApp from "./routes";
-
-const client = createClient({
-  url: "http://localhost:3001/graphql",
-  suspense: true,
-  fetchOptions: { credentials: "include", mode: "cors" },
-});
+import RelayEnvironment from "$lib/services/environment";
 
 function App() {
   const preferedColorScheme = useColorScheme();
@@ -42,11 +37,11 @@ function App() {
         withGlobalStyles
         theme={{ colorScheme, primaryColor: "yellow" }}
       >
-        <Provider value={client}>
+        <RelayEnvironmentProvider environment={RelayEnvironment}>
           <Router>
             <RoutesApp />
           </Router>
-        </Provider>
+        </RelayEnvironmentProvider>
       </MantineProvider>
     </ColorSchemeProvider>
   );

@@ -8,6 +8,7 @@ import {
   TextInput,
   Title,
 } from "@mantine/core";
+import { loadQuery } from "react-relay";
 import {
   Sun,
   Moon,
@@ -16,8 +17,20 @@ import {
   UserCircle,
   Search,
 } from "tabler-icons-react";
+
 import { ThemeToggle } from "./toggle";
-import UserProfile from "./user";
+import UserProfile, { USER_QUERY } from "./user";
+import environment from "$lib/services/environment";
+import { type userQuery } from "./__generated__/userQuery.graphql";
+import { Suspense } from "react";
+import { ErrorBoundary } from "react-error-boundary";
+
+const preloadedQuery = loadQuery<userQuery>(
+  environment,
+  USER_QUERY,
+  {},
+  { fetchPolicy: "store-or-network" }
+);
 
 const MyHeader = () => {
   return (
@@ -50,7 +63,11 @@ const MyHeader = () => {
           <ActionIcon>
             <LayoutGrid />
           </ActionIcon>
-          <UserProfile />
+          <ErrorBoundary fallbackRender={({ error }) => <>{error.message}</>}>
+            <Suspense fallback={"Loading..."}>
+              <UserProfile preloadedQuery={preloadedQuery} />
+            </Suspense>
+          </ErrorBoundary>
         </Group>
       </Group>
     </Header>

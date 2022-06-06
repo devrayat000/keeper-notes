@@ -12,8 +12,22 @@ import {
 import { useForm } from "@mantine/hooks";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { validate as isEmail } from "is-it-email";
-import { useLoginMutation } from "$lib/graphql/generated";
+import { useMutation, graphql } from "react-relay";
+
 import { useUserStore } from "$lib/store";
+import { loginMutation } from "./__generated__/loginMutation.graphql";
+
+const LOGIN_MUTATION = graphql`
+  mutation loginMutation($input: LoginInput!) {
+    login(loginInput: $input) {
+      id
+      email
+      name
+      displayMode
+      darkMode
+    }
+  }
+`;
 
 export default function LoginPage() {
   const { getInputProps, onSubmit, reset, errors } = useForm({
@@ -34,17 +48,21 @@ export default function LoginPage() {
   const location = useLocation();
   const navigate = useNavigate();
 
-  const [, login] = useLoginMutation();
+  // const [, login] = useLoginMutation();
+  const [login, isInFlight] = useMutation<loginMutation>(LOGIN_MUTATION);
   const setUser = useUserStore((store) => store.setUser);
 
   const loginHandler = onSubmit(async (data) => {
-    const { data: resData } = await login({ input: data }, { suspense: false });
-    reset();
-
-    setUser(resData?.login ?? null);
-    if (resData?.login) {
-      navigate("/", { state: location });
-    }
+    login({
+      variables: { input: data },
+      onCompleted(response, errors) {
+        setUser(response.login ?? null);
+        reset();
+        if (response) {
+          navigate("/", { state: location });
+        }
+      },
+    });
   });
 
   return (
@@ -102,7 +120,7 @@ export default function LoginPage() {
             Forgot password?
           </Anchor>
         </Group>
-        <Button fullWidth mt="xl" type="submit">
+        <Button fullWidth mt="xl" type="submit" loading={isInFlight}>
           Log in
         </Button>
       </Paper>

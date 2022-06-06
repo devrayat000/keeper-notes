@@ -11,9 +11,30 @@ import {
   Button,
 } from "@mantine/core";
 import { UserCircle } from "tabler-icons-react";
+import { graphql } from "relay-runtime";
+import { PreloadedQuery, usePreloadedQuery } from "react-relay";
 
-export default function UserProfile() {
+import { type userQuery } from "./__generated__/userQuery.graphql";
+import Logout from "./logout";
+
+export const USER_QUERY = graphql`
+  query userQuery {
+    me {
+      id
+      name
+      email
+    }
+  }
+`;
+
+interface UserProfileProps {
+  preloadedQuery: PreloadedQuery<userQuery>;
+}
+
+export default function UserProfile({ preloadedQuery }: UserProfileProps) {
   const [opened, setOpened] = useState(false);
+  const { me } = usePreloadedQuery<userQuery>(USER_QUERY, preloadedQuery);
+
   return (
     <Popover
       opened={opened}
@@ -32,10 +53,10 @@ export default function UserProfile() {
     >
       <Group direction="column" align="center" spacing="sm">
         <Avatar radius="xl" size="lg" />
-        <Title order={6}>Rayat</Title>
-        <Text>rayat@admin.com</Text>
+        <Title order={6}>{me.name}</Title>
+        <Text>{me.email}</Text>
         <Divider style={{ alignSelf: "stretch" }} />
-        <Button variant="outline">Log out</Button>
+        <Logout />
       </Group>
     </Popover>
   );

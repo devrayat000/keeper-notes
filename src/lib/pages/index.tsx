@@ -1,7 +1,4 @@
-import { Container, Text, Title } from "@mantine/core";
-import { Suspense } from "react";
-import { ErrorBoundary } from "react-error-boundary";
-import { gql, useQuery } from "urql";
+import { Container, Title } from "@mantine/core";
 
 function HomePage() {
   return (

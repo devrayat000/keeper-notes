@@ -1,0 +1,164 @@
+# ------------------------------------------------------
+# THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
+# ------------------------------------------------------
+
+type Label {
+  id: ID!
+  name: String!
+  todos: [Todo!]
+  createdAt: DateTime!
+}
+
+"""
+A date-time string at UTC, such as 2019-12-03T09:54:33Z, compliant with the date-time format.
+"""
+scalar DateTime
+
+type Note {
+  id: ID!
+  text: String!
+  isCompleted: Boolean!
+}
+
+type Todo {
+  id: String!
+  title: String!
+  notes: [Note!]!
+  color: String!
+  mode: TodoMode!
+  labels: [Label!]!
+  createdAt: DateTime!
+  updatedAt: DateTime!
+}
+
+enum TodoMode {
+  SIMPLE
+  CHECKBOX
+}
+
+type User {
+  """Example field (placeholder)"""
+  id: ID!
+  email: String!
+  name: String!
+  displayMode: DisplayMode!
+  darkMode: Boolean!
+  createdAt: DateTime!
+}
+
+enum DisplayMode {
+  LIST
+  GRID
+}
+
+type Token {
+  accessToken: String!
+  refreshToken: String!
+}
+
+type Auth {
+  """Example field (placeholder)"""
+  id: ID!
+  email: String!
+  name: String!
+  displayMode: DisplayMode!
+  darkMode: Boolean!
+  createdAt: DateTime!
+  token: Token!
+}
+
+type Query {
+  todos: [Todo!]!
+  todo(id: ID!): Todo!
+  notes(todoId: ID!): [Note!]!
+  note(id: ID!): Note!
+  labels: [Label!]!
+  label(id: String!): Label!
+  users: [User!]!
+  user(id: String!): User!
+  me: User!
+}
+
+type Mutation {
+  createTodo(createTodoInput: CreateTodoInput!): Todo!
+  updateTodo(id: ID!, updateTodoInput: UpdateTodoInput!): Todo!
+  removeTodo(id: ID!): Todo!
+  copyTodo(id: ID!): Todo!
+  createNote(todoId: ID!, createNoteInput: CreateNoteInput!): Note!
+  updateNote(id: ID!, updateNoteInput: UpdateNoteInput!): Note!
+  removeNote(id: ID!): Note!
+  createLabel(createLabelInput: CreateLabelInput!): Label!
+  updateLabel(id: String!, updateLabelInput: UpdateLabelInput!): Label!
+  removeLabel(id: String!): Label!
+  createUser(createUserInput: CreateUserInput!): User!
+  updateUser(id: String!, updateUserInput: UpdateUserInput!): User!
+  removeUser(id: Int!): User!
+  createAccount(createAccountInput: CreateAccountInput!): Auth!
+  login(loginInput: LoginInput!): Auth!
+  logout: Auth!
+  refresh: Token!
+  toggleDarkMode: Boolean!
+}
+
+input CreateTodoInput {
+  title: String!
+  color: String = "#fafafa"
+  mode: TodoMode = SIMPLE
+}
+
+input UpdateTodoInput {
+  title: String
+  color: String
+  mode: TodoMode
+}
+
+input CreateNoteInput {
+  text: String!
+  isCompleted: Boolean = false
+}
+
+input UpdateNoteInput {
+  text: String
+  isCompleted: Boolean = false
+}
+
+input CreateLabelInput {
+  name: String!
+}
+
+input UpdateLabelInput {
+  name: String
+}
+
+input CreateUserInput {
+  """Example field (placeholder)"""
+  email: String!
+  name: String!
+  hash: String!
+  salt: String!
+}
+
+input UpdateUserInput {
+  """Example field (placeholder)"""
+  email: String
+  name: String
+  hash: String
+  salt: String
+  displayMode: DisplayMode!
+  darkMode: Boolean!
+}
+
+input CreateAccountInput {
+  email: String!
+  name: String!
+  password: String!
+}
+
+input LoginInput {
+  email: String!
+  password: String!
+}
+
+type Subscription {
+  darkModeToggled(id: ID!): Boolean!
+}
