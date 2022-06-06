@@ -20,6 +20,7 @@ import { Note } from 'src/note/entities/note.entity';
 import { NoteService } from 'src/note/note.service';
 import { Label } from 'src/label/entities/label.entity';
 import { LabelService } from 'src/label/label.service';
+import { RefreshGuard } from 'src/auth/refresh.guard';
 
 @Resolver(() => Todo)
 export class TodoResolver {
@@ -30,7 +31,7 @@ export class TodoResolver {
   ) {}
 
   @Mutation(() => Todo)
-  @UseGuards(JwtAuthGuard)
+  @UseGuards(JwtAuthGuard, RefreshGuard)
   createTodo(
     @CurrentUser() user: User,
     @Args('createTodoInput') createTodoInput: CreateTodoInput,
@@ -39,19 +40,19 @@ export class TodoResolver {
   }
 
   @Query(() => [Todo], { name: 'todos' })
-  @UseGuards(JwtAuthGuard)
+  @UseGuards(JwtAuthGuard, RefreshGuard)
   findAll(@CurrentUser() user: User) {
     return this.todoService.findAll(user.id);
   }
 
   @Query(() => Todo, { name: 'todo' })
-  @UseGuards(JwtAuthGuard)
+  @UseGuards(JwtAuthGuard, RefreshGuard)
   findOne(@Args('id', { type: () => ID }) id: string) {
     return this.todoService.findOne(id);
   }
 
   @Mutation(() => Todo)
-  @UseGuards(JwtAuthGuard)
+  @UseGuards(JwtAuthGuard, RefreshGuard)
   updateTodo(
     @Args('id', { type: () => ID }) id: string,
     @Args('updateTodoInput') updateTodoInput: UpdateTodoInput,
@@ -60,13 +61,13 @@ export class TodoResolver {
   }
 
   @Mutation(() => Todo)
-  @UseGuards(JwtAuthGuard)
+  @UseGuards(JwtAuthGuard, RefreshGuard)
   removeTodo(@Args('id', { type: () => ID }) id: string) {
     return this.todoService.remove(id);
   }
 
   @Mutation(() => Todo)
-  @UseGuards(JwtAuthGuard)
+  @UseGuards(JwtAuthGuard, RefreshGuard)
   copyTodo(@Args('id', { type: () => ID }) id: string) {
     return this.todoService.copy(id);
   }

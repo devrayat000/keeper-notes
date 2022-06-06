@@ -4,9 +4,10 @@ import { TodoResolver } from './todo.resolver';
 import { Prisma } from 'src/prisma';
 import { NoteModule } from 'src/note/note.module';
 import { LabelModule } from 'src/label/label.module';
+import { AuthModule } from 'src/auth/auth.module';
 
 @Module({
-  imports: [NoteModule, forwardRef(() => LabelModule)],
+  imports: [AuthModule, NoteModule, forwardRef(() => LabelModule)],
   providers: [TodoResolver, TodoService, Prisma],
   exports: [TodoService],
 })

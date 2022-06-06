@@ -14,9 +14,16 @@ async function bootstrap() {
   const app = await NestFactory.create<NestFastifyApplication>(
     AppModule,
     new FastifyAdapter({ logger: true }),
+    {
+      cors: {
+        credentials: true,
+        origin: ['http://localhost:3000', 'http://localhost:4173'],
+        methods: ['GET', 'POST'],
+      },
+    },
   );
 
-  app.enableCors();
+  // app.enableCors({ credentials: true });
 
   await app.register(AltairFastify, {
     path: '/altair',

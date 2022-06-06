@@ -17,6 +17,7 @@ import { JwtAuthGuard } from 'src/auth/jwt.guard';
 import { UseGuards } from '@nestjs/common';
 import { Todo } from 'src/todo/entities/todo.entity';
 import { TodoService } from 'src/todo/todo.service';
+import { RefreshGuard } from 'src/auth/refresh.guard';
 
 @Resolver(() => Label)
 export class LabelResolver {
@@ -26,7 +27,7 @@ export class LabelResolver {
   ) {}
 
   @Mutation(() => Label)
-  @UseGuards(JwtAuthGuard)
+  @UseGuards(JwtAuthGuard, RefreshGuard)
   createLabel(
     @CurrentUser() user: User,
     @Args('createLabelInput') createLabelInput: CreateLabelInput,
@@ -35,19 +36,19 @@ export class LabelResolver {
   }
 
   @Query(() => [Label], { name: 'labels' })
-  @UseGuards(JwtAuthGuard)
+  @UseGuards(JwtAuthGuard, RefreshGuard)
   findAll(@CurrentUser() user: User) {
     return this.labelService.findAll(user.id);
   }
 
   @Query(() => Label, { name: 'label' })
-  @UseGuards(JwtAuthGuard)
+  @UseGuards(JwtAuthGuard, RefreshGuard)
   findOne(@Args('id') id: string) {
     return this.labelService.findOne(id);
   }
 
   @Mutation(() => Label)
-  @UseGuards(JwtAuthGuard)
+  @UseGuards(JwtAuthGuard, RefreshGuard)
   updateLabel(
     @Args('id') id: string,
     @Args('updateLabelInput') updateLabelInput: UpdateLabelInput,
@@ -56,7 +57,7 @@ export class LabelResolver {
   }
 
   @Mutation(() => Label)
-  @UseGuards(JwtAuthGuard)
+  @UseGuards(JwtAuthGuard, RefreshGuard)
   removeLabel(@Args('id') id: string) {
     return this.labelService.remove(id);
   }

@@ -1,10 +1,21 @@
 import { UseGuards } from '@nestjs/common';
-import { Args, Context, Mutation, Query, Resolver } from '@nestjs/graphql';
+import {
+  Args,
+  Context,
+  ID,
+  Mutation,
+  Query,
+  Resolver,
+  Subscription,
+} from '@nestjs/graphql';
 import { hash as hashPassword, genSalt } from 'bcrypt';
+import { FastifyReply } from 'fastify';
+import { PubSub } from 'mercurius';
 import { User } from 'src/user/entities/user.entity';
 
 import { UserService } from 'src/user/user.service';
 import { AuthService } from './auth.service';
+import { CookieService } from './cookie/cookie.service';
 import { Cookie } from './decorators/cookie.decorator';
 import { CurrentUser } from './decorators/current-user.decorator';
 import { CreateAccountInput } from './dto/create-account.input';
@@ -12,12 +23,14 @@ import { LoginInput } from './dto/login.input';
 import { Auth } from './entities/auth.entity';
 import { Token } from './entities/token.entity';
 import { JwtAuthGuard } from './jwt.guard';
+import { RefreshGuard } from './refresh.guard';
 
 @Resolver()
 export class AuthResolver {
   constructor(
     private readonly userService: UserService,
     private readonly authService: AuthService,
+    private readonly cookieService: CookieService,
   ) {}
 
   @Mutation(() => Auth)
@@ -36,8 +49,7 @@ export class AuthResolver {
     });
     const token = await this.authService.login(user);
 
-    ctx.reply.setCookie('accessToken', token.accessToken, { httpOnly: true });
-    ctx.reply.setCookie('refreshToken', token.refreshToken, { httpOnly: true });
+    this.cookieService.setAuth(ctx.reply, token);
 
     return { ...user, ...token };
   }
@@ -50,8 +62,7 @@ export class AuthResolver {
     );
     const token = await this.authService.login(user);
 
-    ctx.reply.setCookie('accessToken', token.accessToken, { httpOnly: true });
-    ctx.reply.setCookie('refreshToken', token.refreshToken, { httpOnly: true });
+    this.cookieService.setAuth(ctx.reply, token);
 
     return { ...user, token };
   }
@@ -59,25 +70,56 @@ export class AuthResolver {
   @Mutation(() => Auth)
   @UseGuards(JwtAuthGuard)
   logout(@Context() ctx, @CurrentUser() user: User) {
-    ctx.reply.clearCookie('accessToken');
-    ctx.reply.clearCookie('refreshToken');
+    ctx.reply.clearCookie('kp.token.access');
+    ctx.reply.clearCookie('kp.token.refresh');
 
     return user;
   }
 
   @Mutation(() => Token)
-  async refresh(@Context() ctx, @Cookie('refreshToken') refreshToken: string) {
+  async refresh(
+    @Context() ctx,
+    @Cookie('kp.token.refresh') refreshToken: string,
+  ) {
     const token = await this.authService.refreshToken(refreshToken);
 
-    ctx.reply.setCookie('accessToken', token.accessToken, { httpOnly: true });
-    ctx.reply.setCookie('refreshToken', token.refreshToken, { httpOnly: true });
+    this.cookieService.setAuth(ctx.reply, token);
 
     return token;
   }
 
   @Query(() => User)
-  @UseGuards(JwtAuthGuard)
+  @UseGuards(JwtAuthGuard, RefreshGuard)
   async me(@CurrentUser() user: User) {
-    return user;
+    return this.userService.findOne(user.id);
+  }
+
+  @Mutation(() => Boolean)
+  @UseGuards(JwtAuthGuard, RefreshGuard)
+  async toggleDarkMode(
+    @CurrentUser() user: User,
+    @Context('pubsub') pubsub: PubSub,
+  ) {
+    const result = await this.userService.toggleDarkMode(
+      user.id,
+      user.darkMode,
+    );
+
+    pubsub.publish({ topic: 'darkModeToggled', payload: result });
+
+    return result;
+  }
+
+  @Subscription(() => Boolean, {
+    filter(payload, variables) {
+      return payload.id === variables.id;
+    },
+  })
+  @UseGuards(JwtAuthGuard, RefreshGuard)
+  async darkModeToggled(
+    @Args('id', { type: () => ID }) id: string,
+    @Context('pubsub') pubsub: PubSub,
+  ) {
+    return pubsub.subscribe('darkModeToggled');
   }
 }

@@ -5,13 +5,14 @@ import { CreateNoteInput } from './dto/create-note.input';
 import { UpdateNoteInput } from './dto/update-note.input';
 import { JwtAuthGuard } from 'src/auth/jwt.guard';
 import { UseGuards } from '@nestjs/common';
+import { RefreshGuard } from 'src/auth/refresh.guard';
 
 @Resolver(() => Note)
 export class NoteResolver {
   constructor(private readonly noteService: NoteService) {}
 
   @Mutation(() => Note)
-  @UseGuards(JwtAuthGuard)
+  @UseGuards(JwtAuthGuard, RefreshGuard)
   createNote(
     @Args('todoId', { type: () => ID }) todoId: string,
     @Args('createNoteInput') createNoteInput: CreateNoteInput,
@@ -20,19 +21,19 @@ export class NoteResolver {
   }
 
   @Query(() => [Note], { name: 'notes' })
-  @UseGuards(JwtAuthGuard)
+  @UseGuards(JwtAuthGuard, RefreshGuard)
   findAll(@Args('todoId', { type: () => ID }) todoId: string) {
     return this.noteService.findAll(todoId);
   }
 
   @Query(() => Note, { name: 'note' })
-  @UseGuards(JwtAuthGuard)
+  @UseGuards(JwtAuthGuard, RefreshGuard)
   findOne(@Args('id', { type: () => ID }) id: string) {
     return this.noteService.findOne(id);
   }
 
   @Mutation(() => Note)
-  @UseGuards(JwtAuthGuard)
+  @UseGuards(JwtAuthGuard, RefreshGuard)
   updateNote(
     @Args('id', { type: () => ID }) id: string,
     @Args('updateNoteInput') updateNoteInput: UpdateNoteInput,
@@ -41,7 +42,7 @@ export class NoteResolver {
   }
 
   @Mutation(() => Note)
-  @UseGuards(JwtAuthGuard)
+  @UseGuards(JwtAuthGuard, RefreshGuard)
   removeNote(@Args('id', { type: () => ID }) id: string) {
     return this.noteService.remove(id);
   }

@@ -70,13 +70,13 @@ type Auth {
 type Query {
   todos: [Todo!]!
   todo(id: ID!): Todo!
+  me: User!
+  users: [User!]!
+  user(id: String!): User!
   notes(todoId: ID!): [Note!]!
   note(id: ID!): Note!
   labels: [Label!]!
   label(id: String!): Label!
-  users: [User!]!
-  user(id: String!): User!
-  me: User!
 }
 
 type Mutation {
@@ -84,19 +84,20 @@ type Mutation {
   updateTodo(id: ID!, updateTodoInput: UpdateTodoInput!): Todo!
   removeTodo(id: ID!): Todo!
   copyTodo(id: ID!): Todo!
+  createAccount(createAccountInput: CreateAccountInput!): Auth!
+  login(loginInput: LoginInput!): Auth!
+  logout: Auth!
+  refresh: Token!
+  toggleDarkMode: Boolean!
+  createUser(createUserInput: CreateUserInput!): User!
+  updateUser(id: String!, updateUserInput: UpdateUserInput!): User!
+  removeUser(id: Int!): User!
   createNote(todoId: ID!, createNoteInput: CreateNoteInput!): Note!
   updateNote(id: ID!, updateNoteInput: UpdateNoteInput!): Note!
   removeNote(id: ID!): Note!
   createLabel(createLabelInput: CreateLabelInput!): Label!
   updateLabel(id: String!, updateLabelInput: UpdateLabelInput!): Label!
   removeLabel(id: String!): Label!
-  createUser(createUserInput: CreateUserInput!): User!
-  updateUser(id: String!, updateUserInput: UpdateUserInput!): User!
-  removeUser(id: Int!): User!
-  createAccount(createAccountInput: CreateAccountInput!): Auth!
-  login(loginInput: LoginInput!): Auth!
-  logout: Auth!
-  refresh: Token!
 }
 
 input CreateTodoInput {
@@ -111,22 +112,15 @@ input UpdateTodoInput {
   mode: TodoMode
 }
 
-input CreateNoteInput {
-  text: String!
-  isCompleted: Boolean = false
-}
-
-input UpdateNoteInput {
-  text: String
-  isCompleted: Boolean = false
-}
-
-input CreateLabelInput {
+input CreateAccountInput {
+  email: String!
   name: String!
+  password: String!
 }
 
-input UpdateLabelInput {
-  name: String
+input LoginInput {
+  email: String!
+  password: String!
 }
 
 input CreateUserInput {
@@ -147,13 +141,24 @@ input UpdateUserInput {
   darkMode: Boolean!
 }
 
-input CreateAccountInput {
-  email: String!
-  name: String!
-  password: String!
+input CreateNoteInput {
+  text: String!
+  isCompleted: Boolean = false
 }
 
-input LoginInput {
-  email: String!
-  password: String!
+input UpdateNoteInput {
+  text: String
+  isCompleted: Boolean = false
+}
+
+input CreateLabelInput {
+  name: String!
+}
+
+input UpdateLabelInput {
+  name: String
+}
+
+type Subscription {
+  darkModeToggled(id: ID!): Boolean!
 }

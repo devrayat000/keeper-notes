@@ -42,7 +42,10 @@ export class AuthService {
     try {
       const decoded = await this.decodeJwt(token);
 
-      const user = await this.usersService.findByEmail(decoded.email);
+      const user = await this.usersService.findByEmail(decoded.email, {
+        id: true,
+        email: true,
+      });
       if (!user) {
         throw new UnauthorizedException('User Not Found!');
       }

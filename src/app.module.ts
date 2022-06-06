@@ -23,7 +23,6 @@ import { NoteModule } from './note/note.module';
       graphiql: false,
       ide: false,
       path: '/graphql',
-      context: (request, reply) => ({ request, reply }),
     }),
     AuthModule,
     NoteModule,
